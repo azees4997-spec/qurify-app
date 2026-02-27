@@ -1,0 +1,1 @@
+# qurify-app
