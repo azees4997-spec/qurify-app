@@ -8,7 +8,6 @@ import { useCart } from "../context/CartContext";
 
 export default function Catalogue({ searchParams }) {
   const query = searchParams?.search || "";
-
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const { addToCart } = useCart();
@@ -31,13 +30,12 @@ export default function Catalogue({ searchParams }) {
     }
 
     const { data } = await request;
-
     setData(data || []);
     setLoading(false);
   }
 
   return (
-    <div className="catalogue">
+    <div className="catalogue-wrapper">
 
       {loading && <p>Loading medicines...</p>}
 
@@ -46,48 +44,66 @@ export default function Catalogue({ searchParams }) {
       )}
 
       {data.map((item) => {
-        const save = item.branded_price - item.generic_price;
-        const percent = Math.round(
-          (save / item.branded_price) * 100
+        const saveAmount = item.branded_price - item.generic_price;
+        const savePercent = Math.round(
+          (saveAmount / item.branded_price) * 100
         );
 
         return (
-          <div key={item.id} className="compare-card">
+          <div key={item.id} className="comparison-card">
 
-            {/* Branded */}
-            <div className="brand">
+            {/* LEFT - BRANDED (Visually Weak) */}
+            <div className="branded-side">
               <h3>{item.branded_name}</h3>
-              <p>{item.branded_company}</p>
-              <p>₹{item.branded_price}</p>
+              <p className="company">{item.branded_company}</p>
+
+              <p className="mrp">
+                MRP ₹{item.branded_mrp}
+              </p>
+
+              <p className="price">
+                ₹{item.branded_price}
+              </p>
+
+              <p className="composition">
+                {item.composition}
+              </p>
             </div>
 
-            {/* Generic */}
-            <div className="generic">
-              <div className="badge">Recommended</div>
+            {/* RIGHT - GENERIC (Dominant) */}
+            <div className="generic-side">
 
-              <h3>{item.generic_name}</h3>
-              <p>{item.generic_company}</p>
-              <p className="orange">
+              <div className="recommended-badge">
+                SMART CHOICE
+              </div>
+
+              <h2>{item.generic_name}</h2>
+              <p className="company">{item.generic_company}</p>
+
+              <p className="mrp strike">
+                MRP ₹{item.branded_price}
+              </p>
+
+              <p className="price highlight">
                 ₹{item.generic_price}
               </p>
 
-              <div className="bar">
-                <div
-                  className="fill"
-                  style={{ width: `${percent}%` }}
-                />
+              <div className="saving-box">
+                🔥 Save ₹{saveAmount} ({savePercent}%)
               </div>
 
-              <p className="green">
-                Save ₹{save} ({percent}%)
-              </p>
-
               <button
+                className="switch-btn"
                 onClick={() => addToCart(item)}
               >
-                Add to Cart
+                Switch & Save ₹{saveAmount}
               </button>
+
+              <p className="composition">
+                Same composition: {item.composition}
+              </p>
             </div>
+
           </div>
         );
       })}
