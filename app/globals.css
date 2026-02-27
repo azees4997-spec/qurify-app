@@ -1,115 +1,304 @@
-body { margin:0; font-family:sans-serif; }
+/* ------------------- RESET ------------------- */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #ffffff;
+  color: #111;
+}
+
+/* ------------------- NAVBAR ------------------- */
 
 .navbar {
-  height:70px;
-  background:#1E3A8A;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:0 40px;
+  height: 70px;
+  background: #1E3A8A;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
-.logo { color:#FF6B00; font-size:22px; text-decoration:none; }
+.logo {
+  font-size: 22px;
+  font-weight: bold;
+  color: #FF6B00;
+  text-decoration: none;
+}
 
-.nav-link { color:white; margin-right:20px; text-decoration:none; }
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
 
-.cart-icon { position:relative; color:white; text-decoration:none; }
+.nav-link {
+  color: white;
+  text-decoration: none;
+  font-size: 15px;
+}
+
+.cart-icon {
+  position: relative;
+  color: white;
+  text-decoration: none;
+  font-size: 20px;
+}
 
 .cart-count {
-  position:absolute;
-  top:-8px;
-  right:-10px;
-  background:#FF6B00;
-  border-radius:50%;
-  padding:2px 6px;
-  font-size:12px;
-  color:white;
+  position: absolute;
+  top: -8px;
+  right: -10px;
+  background: #FF6B00;
+  border-radius: 50%;
+  padding: 3px 7px;
+  font-size: 12px;
+  color: white;
 }
+
+/* ------------------- HERO SECTION ------------------- */
 
 .hero {
-  background:linear-gradient(135deg,#1E3A8A,#2563EB);
-  color:white;
-  padding:120px 20px;
-  text-align:center;
+  background: linear-gradient(135deg, #1E3A8A, #2563EB);
+  color: white;
+  padding: 120px 20px;
+  text-align: center;
 }
 
-.hero span { color:#FF6B00; }
+.hero h1 {
+  font-size: 48px;
+  margin-bottom: 15px;
+}
 
-.search-box { margin-top:30px; position:relative; }
+.hero span {
+  color: #FF6B00;
+}
+
+.hero p {
+  font-size: 18px;
+  opacity: 0.9;
+}
+
+.search-box {
+  margin-top: 30px;
+  position: relative;
+}
 
 .search-box input {
-  padding:12px;
-  width:300px;
-  border-radius:6px;
-  border:none;
+  padding: 14px;
+  width: 300px;
+  border-radius: 6px 0 0 6px;
+  border: none;
+  font-size: 14px;
 }
 
 .search-box button {
-  padding:12px 20px;
-  background:#FF6B00;
-  border:none;
-  color:white;
+  padding: 14px 22px;
+  background: #FF6B00;
+  border: none;
+  color: white;
+  font-weight: 600;
+  border-radius: 0 6px 6px 0;
+  cursor: pointer;
 }
 
+/* Suggestions Dropdown */
+
 .suggestions {
-  background:white;
-  color:black;
-  position:absolute;
-  width:300px;
-  margin-top:5px;
-  border-radius:6px;
-  box-shadow:0 5px 15px rgba(0,0,0,0.1);
+  position: absolute;
+  width: 300px;
+  background: white;
+  color: black;
+  margin-top: 5px;
+  border-radius: 6px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  z-index: 1000;
 }
 
 .suggestions div {
-  padding:10px;
-  cursor:pointer;
+  padding: 10px;
+  cursor: pointer;
 }
 
-.catalogue { padding:40px; background:#F8FAFC; }
-
-.compare-card {
-  display:flex;
-  justify-content:space-between;
-  background:white;
-  padding:30px;
-  margin-bottom:20px;
-  border-radius:10px;
+.suggestions div:hover {
+  background: #f1f5f9;
 }
 
-.brand, .generic { width:45%; text-align:center; }
+/* ------------------- CATALOGUE ------------------- */
 
-.badge {
-  background:#FF6B00;
-  color:white;
-  padding:4px 10px;
-  border-radius:20px;
-  font-size:12px;
+.catalogue-wrapper {
+  padding: 40px;
+  background: #F8FAFC;
+  min-height: 100vh;
 }
 
-.bar {
-  height:10px;
-  background:#eee;
-  margin:10px 0;
-  border-radius:5px;
+/* Comparison Card */
+
+.comparison-card {
+  display: flex;
+  justify-content: space-between;
+  background: white;
+  border-radius: 16px;
+  padding: 40px;
+  margin-bottom: 40px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+  position: relative;
+  flex-wrap: wrap;
 }
 
-.fill {
-  height:100%;
-  background:#FF6B00;
-  border-radius:5px;
+/* Branded Side (Visually Weak) */
+
+.branded-side {
+  width: 45%;
+  opacity: 0.7;
 }
 
-.orange { color:#FF6B00; }
-.green { color:#16a34a; }
+.branded-side h3 {
+  margin: 0 0 5px 0;
+}
+
+.company {
+  color: gray;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.mrp {
+  font-size: 14px;
+  color: gray;
+}
+
+.price {
+  font-size: 22px;
+  font-weight: bold;
+  margin: 8px 0;
+}
+
+.strike {
+  text-decoration: line-through;
+}
+
+/* Generic Side (Dominant) */
+
+.generic-side {
+  width: 50%;
+  border: 2px solid #FF6B00;
+  padding: 30px;
+  border-radius: 14px;
+  background: #FFF7ED;
+  position: relative;
+}
+
+.generic-side h2 {
+  margin: 0 0 5px 0;
+}
+
+.highlight {
+  font-size: 30px;
+  font-weight: bold;
+  color: #FF6B00;
+  margin: 8px 0;
+}
+
+/* Recommended Badge */
+
+.recommended-badge {
+  position: absolute;
+  top: -15px;
+  right: 20px;
+  background: #FF6B00;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* Saving Box */
+
+.saving-box {
+  margin: 15px 0;
+  background: #dcfce7;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: bold;
+  color: #16a34a;
+  text-align: center;
+}
+
+/* Switch Button */
+
+.switch-btn {
+  width: 100%;
+  padding: 14px;
+  background: #1E3A8A;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.switch-btn:hover {
+  background: #2563EB;
+}
+
+/* Composition */
+
+.composition {
+  font-size: 13px;
+  margin-top: 12px;
+  color: #555;
+}
+
+/* Floating Cart */
 
 .floating-cart {
-  position:fixed;
-  bottom:30px;
-  right:30px;
-  background:#FF6B00;
-  color:white;
-  padding:18px;
-  border-radius:50%;
-  text-decoration:none;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #FF6B00;
+  color: white;
+  padding: 18px;
+  border-radius: 50%;
+  text-decoration: none;
+  font-size: 22px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+  transition: 0.3s;
+}
+
+.floating-cart:hover {
+  transform: scale(1.1);
+}
+
+/* ------------------- MOBILE RESPONSIVE ------------------- */
+
+@media (max-width: 768px) {
+
+  .comparison-card {
+    flex-direction: column;
+  }
+
+  .branded-side,
+  .generic-side {
+    width: 100%;
+  }
+
+  .generic-side {
+    margin-top: 20px;
+  }
+
+  .search-box input {
+    width: 200px;
+  }
+
+  .navbar {
+    padding: 0 20px;
+  }
 }
