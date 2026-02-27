@@ -1,3 +1,19 @@
+"use client";
+
+import { CartProvider } from "./context/CartContext";
+
+export default function RootLayout({ children }) {
+  return (
+    <html>
+      <body>
+        <CartProvider>
+          {children}
+        </CartProvider>
+      </body>
+    </html>
+  );
+}
+
 import "./globals.css";
 import Link from "next/link";
 
