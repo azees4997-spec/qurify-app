@@ -8,6 +8,7 @@ import Link from "next/link";
 export default function Home() {
   const [medicines, setMedicines] = useState([]);
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
   const { addToCart } = useCart();
 
   useEffect(() => {
@@ -22,8 +23,9 @@ export default function Home() {
     if (error) {
       console.log("Supabase error:", error);
     } else {
-      setMedicines(data);
+      setMedicines(data || []);
     }
+    setLoading(false);
   };
 
   const filtered =
@@ -40,9 +42,10 @@ export default function Home() {
     <div className="container">
       <h1>Save up to 70% on Your Medicines</h1>
 
+      {/* SEARCH BAR */}
       <div className="search-bar">
         <input
-          placeholder="Search medicine..."
+          placeholder="Search medicine by name or composition..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -50,48 +53,106 @@ export default function Home() {
       </div>
 
       <Link href="/cart" className="cart-link">
-        Go to Cart
+        🛒 Go to Cart
       </Link>
 
-      {filtered.map((med) => (
-        <div key={med.id} className="card comparison">
-          <div className="product">
-            <h3>{med.branded_name}</h3>
-            <p>Company: {med.branded_company}</p>
-            <p>MRP: ₹{med.branded_mrp}</p>
-            <p>Price: ₹{med.branded_price}</p>
-            <p>Composition: {med.composition}</p>
-            <button
-              onClick={() =>
-                addToCart({
-                  name: med.branded_name,
-                  price: med.branded_price,
-                })
-              }
-            >
-              Add Branded
-            </button>
-          </div>
+      {/* LOADING */}
+      {loading && <p>Loading medicines...</p>}
 
-          <div className="product highlight">
-            <h3>{med.generic_name}</h3>
-            <p>Company: {med.generic_company}</p>
-            <p>MRP: ₹{med.generic_mrp}</p>
-            <p>Price: ₹{med.generic_price}</p>
-            <p>Composition: {med.composition}</p>
-            <button
-              onClick={() =>
-                addToCart({
-                  name: med.generic_name,
-                  price: med.generic_price,
-                })
-              }
-            >
-              Add Generic
-            </button>
+      {/* NO RESULTS */}
+      {!loading && filtered.length === 0 && (
+        <p>No medicines found.</p>
+      )}
+
+      {/* PRODUCT LIST */}
+      {filtered.map((med) => {
+        const brandedSave =
+          ((med.branded_mrp - med.branded_price) /
+            med.branded_mrp) *
+          100;
+
+        const genericSave =
+          ((med.generic_mrp - med.generic_price) /
+            med.generic_mrp) *
+          100;
+
+        const switchSave =
+          ((med.branded_price - med.generic_price) /
+            med.branded_price) *
+          100;
+
+        return (
+          <div key={med.id} className="card comparison">
+            
+            {/* BRANDED SECTION */}
+            <div className="product">
+              <h3>{med.branded_name}</h3>
+              <div className="company">
+                {med.branded_company}
+              </div>
+
+              <div className="price">
+                ₹{med.branded_price}
+                <span className="mrp">
+                  ₹{med.branded_mrp}
+                </span>
+              </div>
+
+              <div className="saving">
+                You Save {brandedSave.toFixed(0)}%
+              </div>
+
+              <button
+                className="add-btn branded-btn"
+                onClick={() =>
+                  addToCart({
+                    name: med.branded_name,
+                    price: med.branded_price,
+                  })
+                }
+              >
+                Add to Cart
+              </button>
+            </div>
+
+            {/* GENERIC SECTION */}
+            <div className="product highlight">
+              <h3>
+                {med.generic_name} 🔥
+              </h3>
+
+              <div className="company">
+                {med.generic_company}
+              </div>
+
+              <div className="price">
+                ₹{med.generic_price}
+                <span className="mrp">
+                  ₹{med.generic_mrp}
+                </span>
+              </div>
+
+              <div className="saving">
+                Save {genericSave.toFixed(0)}% | 
+                Extra {switchSave.toFixed(0)}% vs Branded
+              </div>
+
+              <button
+                className="add-btn generic-btn"
+                onClick={() =>
+                  addToCart({
+                    name: med.generic_name,
+                    price: med.generic_price,
+                  })
+                }
+              >
+                Add to Cart
+              </button>
+            </div>
+
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
