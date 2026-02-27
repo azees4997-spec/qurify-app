@@ -4,28 +4,28 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
-  const [search, setSearch] = useState("");
-  const [count, setCount] = useState(0);
   const router = useRouter();
+  const [search, setSearch] = useState("");
+  const [counter, setCounter] = useState(0);
 
-  // Animated Savings Counter
+  // Animated savings counter
   useEffect(() => {
     let start = 0;
     const end = 70;
     const duration = 1500;
-    const incrementTime = 20;
-    const step = end / (duration / incrementTime);
+    const stepTime = 20;
+    const increment = end / (duration / stepTime);
 
-    const counter = setInterval(() => {
-      start += step;
+    const timer = setInterval(() => {
+      start += increment;
       if (start >= end) {
         start = end;
-        clearInterval(counter);
+        clearInterval(timer);
       }
-      setCount(Math.floor(start));
-    }, incrementTime);
+      setCounter(Math.floor(start));
+    }, stepTime);
 
-    return () => clearInterval(counter);
+    return () => clearInterval(timer);
   }, []);
 
   const handleSearch = () => {
@@ -37,7 +37,52 @@ export default function Home() {
   };
 
   return (
-    <div style={{ fontFamily: "Arial, sans-serif", background: "#fff" }}>
+    <div style={{ fontFamily: "Arial, sans-serif", background: "#ffffff" }}>
+      
+      {/* NAVBAR */}
+      <div
+        style={{
+          position: "sticky",
+          top: 0,
+          zIndex: 1000,
+          background: "#ffffff",
+          padding: "15px 30px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          boxShadow: "0 2px 10px rgba(0,0,0,0.05)"
+        }}
+      >
+        <h2 style={{ color: "#1E3A8A" }}>Qurify</h2>
+
+        <div style={{ display: "flex", gap: 20 }}>
+          <button
+            onClick={() => router.push("/catalogue")}
+            style={{
+              background: "transparent",
+              border: "none",
+              cursor: "pointer",
+              fontWeight: "bold"
+            }}
+          >
+            Medicines
+          </button>
+
+          <button
+            style={{
+              background: "#F97316",
+              color: "white",
+              padding: "8px 15px",
+              borderRadius: 8,
+              border: "none",
+              cursor: "pointer"
+            }}
+            onClick={() => router.push("/cart")}
+          >
+            Cart
+          </button>
+        </div>
+      </div>
 
       {/* HERO SECTION */}
       <section
@@ -45,69 +90,52 @@ export default function Home() {
           padding: "100px 20px",
           textAlign: "center",
           background: "linear-gradient(135deg, #1E3A8A, #2563EB)",
-          color: "white",
-          position: "relative",
-          overflow: "hidden",
+          color: "white"
         }}
       >
-        {/* Animated Background Glow */}
-        <div
-          style={{
-            position: "absolute",
-            width: 300,
-            height: 300,
-            background: "#F97316",
-            borderRadius: "50%",
-            filter: "blur(120px)",
-            top: -50,
-            left: -50,
-            animation: "pulse 6s infinite",
-          }}
-        />
-
-        <h1 style={{ fontSize: 48, marginBottom: 20 }}>
+        <h1 style={{ fontSize: 46, marginBottom: 20 }}>
           Save Up To{" "}
           <span style={{ color: "#F97316" }}>
-            {count}%
+            {counter}%
           </span>{" "}
           On Medicines
         </h1>
 
         <p style={{ fontSize: 20, marginBottom: 40 }}>
-          Genuine • Certified • Affordable
+          Genuine • Certified • Affordable Healthcare
         </p>
 
-        {/* Sticky Search Bar */}
         <div
           style={{
             maxWidth: 600,
             margin: "auto",
             display: "flex",
-            gap: 10,
+            gap: 10
           }}
         >
           <input
-            placeholder="Search medicine or composition..."
+            placeholder="Search medicine name..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             style={{
               flex: 1,
-              padding: 16,
-              borderRadius: 12,
+              padding: 15,
+              borderRadius: 10,
               border: "none",
-              fontSize: 16,
+              fontSize: 16
             }}
           />
+
           <button
             onClick={handleSearch}
             style={{
-              padding: "16px 25px",
+              padding: "15px 25px",
               background: "#F97316",
               border: "none",
-              borderRadius: 12,
+              borderRadius: 10,
               color: "white",
               fontWeight: "bold",
-              cursor: "pointer",
+              cursor: "pointer"
             }}
           >
             Search
@@ -115,14 +143,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* BEFORE vs AFTER SECTION */}
-      <section
-        style={{
-          padding: "80px 20px",
-          textAlign: "center",
-        }}
-      >
-        <h2 style={{ fontSize: 32, color: "#1E3A8A", marginBottom: 50 }}>
+      {/* BEFORE VS AFTER */}
+      <section style={{ padding: "80px 20px", textAlign: "center" }}>
+        <h2 style={{ marginBottom: 50, color: "#1E3A8A" }}>
           Same Composition. Massive Savings.
         </h2>
 
@@ -131,7 +154,7 @@ export default function Home() {
             display: "flex",
             justifyContent: "center",
             gap: 40,
-            flexWrap: "wrap",
+            flexWrap: "wrap"
           }}
         >
           <div
@@ -139,7 +162,7 @@ export default function Home() {
               border: "1px solid #eee",
               padding: 30,
               borderRadius: 15,
-              width: 250,
+              width: 250
             }}
           >
             <h3>Dolo 650</h3>
@@ -152,13 +175,13 @@ export default function Home() {
           <div
             style={{
               border: "2px solid #F97316",
-              background: "#FFF7ED",
               padding: 30,
               borderRadius: 15,
               width: 250,
+              background: "#FFF7ED"
             }}
           >
-            <h3>Paracip 650 ⭐</h3>
+            <h3 style={{ color: "#F97316" }}>Paracip 650 ⭐</h3>
             <p style={{ textDecoration: "line-through", color: "gray" }}>
               ₹35
             </p>
@@ -170,16 +193,16 @@ export default function Home() {
         </div>
       </section>
 
-      {/* DOCTOR TRUST BADGE */}
+      {/* TRUST SECTION */}
       <section
         style={{
           background: "#F8FAFC",
-          padding: "60px 20px",
-          textAlign: "center",
+          padding: "70px 20px",
+          textAlign: "center"
         }}
       >
-        <h2 style={{ marginBottom: 20 }}>Trusted by Doctors</h2>
-        <p style={{ maxWidth: 600, margin: "auto" }}>
+        <h2>Trusted by Doctors</h2>
+        <p style={{ maxWidth: 600, margin: "20px auto" }}>
           All medicines are sourced from WHO-GMP certified manufacturers and verified by licensed pharmacists.
         </p>
       </section>
@@ -193,29 +216,29 @@ export default function Home() {
             display: "flex",
             justifyContent: "center",
             gap: 30,
-            flexWrap: "wrap",
+            flexWrap: "wrap"
           }}
         >
           <div style={{ maxWidth: 250 }}>
-            ⭐⭐⭐⭐⭐  
-            <p>"Saved thousands on monthly medicines!"</p>
+            ⭐⭐⭐⭐⭐
+            <p>"Saved thousands every month!"</p>
           </div>
           <div style={{ maxWidth: 250 }}>
-            ⭐⭐⭐⭐⭐  
-            <p>"Same quality, much lower price."</p>
-          </div>
-          <div style={{ maxWidth: 250 }}>
-            ⭐⭐⭐⭐⭐  
+            ⭐⭐⭐⭐⭐
             <p>"Fast delivery & genuine medicines."</p>
+          </div>
+          <div style={{ maxWidth: 250 }}>
+            ⭐⭐⭐⭐⭐
+            <p>"Best alternative to branded drugs."</p>
           </div>
         </div>
       </section>
 
-      {/* FAQ SECTION */}
+      {/* FAQ */}
       <section
         style={{
           background: "#F8FAFC",
-          padding: "60px 20px",
+          padding: "60px 20px"
         }}
       >
         <h2 style={{ textAlign: "center", marginBottom: 30 }}>
@@ -226,14 +249,25 @@ export default function Home() {
           <p><strong>Are generic medicines safe?</strong></p>
           <p>Yes. They contain the same active ingredients as branded medicines.</p>
 
-          <p><strong>Why are they cheaper?</strong></p>
-          <p>No heavy marketing costs — same quality at lower price.</p>
+          <p><strong>Why cheaper?</strong></p>
+          <p>No heavy marketing cost — same quality at lower price.</p>
 
-          <p><strong>Do I need prescription?</strong></p>
-          <p>Prescription medicines require valid doctor prescription.</p>
+          <p><strong>Need prescription?</strong></p>
+          <p>Prescription medicines require valid prescription.</p>
         </div>
       </section>
 
+      {/* FOOTER */}
+      <footer
+        style={{
+          background: "#1E3A8A",
+          color: "white",
+          padding: 30,
+          textAlign: "center"
+        }}
+      >
+        © {new Date().getFullYear()} Qurify. All rights reserved.
+      </footer>
     </div>
   );
 }
