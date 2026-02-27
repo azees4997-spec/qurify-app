@@ -1,23 +1,36 @@
 "use client";
 
 export const dynamic = "force-dynamic";
+
 import { useCart } from "../context/CartContext";
 import { useRouter } from "next/navigation";
 
-export default function Checkout() {
-  const { clearCart } = useCart();
+export default function CheckoutPage() {
+  const cartContext = useCart();
   const router = useRouter();
 
-  const placeOrder = () => {
+  if (!cartContext) return null;
+
+  const { cart, clearCart } = cartContext;
+
+  const total = cart.reduce(
+    (sum, item) => sum + item.generic_price * item.quantity,
+    0
+  );
+
+  const handleOrder = () => {
     clearCart();
-    router.push("/order-success");
+    alert("Order Placed Successfully!");
+    router.push("/");
   };
 
   return (
-    <div className="container">
-      <h2>Checkout</h2>
-      <p>Payment Mode: Cash on Delivery</p>
-      <button onClick={placeOrder}>Place Order</button>
+    <div style={{ padding: "40px" }}>
+      <h1>Checkout</h1>
+
+      <h2>Total: ₹{total}</h2>
+
+      <button onClick={handleOrder}>Place Order</button>
     </div>
   );
 }
