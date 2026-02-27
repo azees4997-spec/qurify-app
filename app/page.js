@@ -15,7 +15,7 @@ export default function Home() {
   }, []);
 
   const fetchMedicines = async () => {
-    const { data } = await supabase.from("medicines").select("*");
+    const { data } = await supabase.from("medicine_switch").select("*");
     if (data) setMedicines(data);
   };
 
