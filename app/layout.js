@@ -1,40 +1,38 @@
 import "./globals.css";
-import { CartProvider } from "./context/CartContext";
 import Link from "next/link";
 
 export const metadata = {
-  title: "Qurify",
-  description: "Save More with Generic Medicines",
+  title: "Qurify - Save on Medicines",
+  description: "Switch to affordable generic medicines",
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html>
-      <body>
-        <CartProvider>
-          <nav
-            style={{
-              background: "#1E3A8A",
-              padding: "15px 30px",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              color: "white",
-            }}
-          >
-            <h2 style={{ color: "#F97316", margin: 0 }}>Qurify</h2>
-            <div>
-              <Link href="/" style={{ color: "white", marginRight: 20 }}>
-                Home
-              </Link>
-              <Link href="/cart" style={{ color: "white" }}>
-                Cart
-              </Link>
-            </div>
-          </nav>
+    <html lang="en">
+      <body style={{ margin: 0, fontFamily: "Arial, sans-serif" }}>
+        {/* SINGLE NAVBAR */}
+        <div
+          style={{
+            background: "#0F172A",
+            color: "white",
+            padding: "15px 40px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center"
+          }}
+        >
+          <Link href="/" style={{ color: "#F97316", fontWeight: "bold", fontSize: 22, textDecoration: "none" }}>
+            Qurify
+          </Link>
 
-          {children}
-        </CartProvider>
+          <div style={{ display: "flex", gap: 25 }}>
+            <Link href="/" style={{ color: "white", textDecoration: "none" }}>Home</Link>
+            <Link href="/catalogue" style={{ color: "white", textDecoration: "none" }}>Medicines</Link>
+            <Link href="/cart" style={{ color: "white", textDecoration: "none" }}>Cart</Link>
+          </div>
+        </div>
+
+        {children}
       </body>
     </html>
   );
