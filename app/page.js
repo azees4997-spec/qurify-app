@@ -21,7 +21,11 @@ export default function Home() {
       .from("medicine_switch")
       .select("*");
 
-    if (!error) setMedicines(data || []);
+    if (error) {
+      console.log("Supabase error:", error);
+    } else {
+      setMedicines(data || []);
+    }
     setLoading(false);
   };
 
@@ -37,19 +41,19 @@ export default function Home() {
 
   return (
     <div className="container">
-      <h1>Save up to 70% on Your Medicines</h1>
+      <h1>Save More with Generic Medicines</h1>
 
       {/* SEARCH */}
       <div className="search-bar">
         <input
-          placeholder="Search medicine..."
+          placeholder="Search by brand or composition..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
         <button>Search</button>
       </div>
 
-      {/* ADD POPUP */}
+      {/* ADD TO CART POPUP */}
       {showPopup && (
         <div
           style={{
@@ -60,7 +64,8 @@ export default function Home() {
             color: "white",
             padding: "12px 20px",
             borderRadius: "10px",
-            zIndex: 1000,
+            zIndex: 999,
+            boxShadow: "0 10px 20px rgba(0,0,0,0.2)"
           }}
         >
           ✅ Item Added to Cart
@@ -79,69 +84,120 @@ export default function Home() {
             padding: "15px 20px",
             borderRadius: "50px",
             fontWeight: 600,
-            cursor: "pointer",
             boxShadow: "0 10px 20px rgba(0,0,0,0.2)",
+            cursor: "pointer",
+            zIndex: 999
           }}
         >
           🛒 {cart.length}
         </div>
       </Link>
 
-      {loading && <p>Loading...</p>}
+      {loading && <p>Loading medicines...</p>}
 
-      {!loading &&
-        filtered.map((med) => {
-          const brandedSave =
-            ((med.branded_mrp - med.branded_price) /
-              med.branded_mrp) *
-            100;
+      {!loading && filtered.length === 0 && (
+        <p>No medicines found.</p>
+      )}
 
-          const genericSave =
-            ((med.generic_mrp - med.generic_price) /
-              med.generic_mrp) *
-            100;
+      {/* PRODUCT CARDS */}
+      {filtered.map((med) => {
+        const brandedSave =
+          ((med.branded_mrp - med.branded_price) /
+            med.branded_mrp) *
+          100;
 
-          const switchSave =
-            med.branded_price - med.generic_price;
+        const genericSave =
+          ((med.generic_mrp - med.generic_price) /
+            med.generic_mrp) *
+          100;
 
-          return (
-            <div key={med.id} className="card comparison">
+        const switchSave =
+          med.branded_price - med.generic_price;
+
+        return (
+          <div
+            key={med.id}
+            className="card"
+            style={{ marginBottom: 50 }}
+          >
+            {/* HEADER */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: 20,
+                flexWrap: "wrap"
+              }}
+            >
+              <h2 style={{ color: "#1E3A8A" }}>
+                {med.composition}
+              </h2>
+
               <div
                 style={{
-                  background: "#FFF7ED",
-                  padding: 15,
-                  borderRadius: 10,
-                  marginBottom: 20,
-                  color: "#F97316",
+                  background: "#F97316",
+                  color: "white",
+                  padding: "10px 20px",
+                  borderRadius: 30,
                   fontWeight: 600,
                 }}
               >
                 💰 Switch & Save ₹{switchSave}
               </div>
+            </div>
 
+            <div
+              style={{
+                display: "flex",
+                gap: 30,
+                flexWrap: "wrap"
+              }}
+            >
               {/* BRANDED */}
-              <div className="product">
+              <div
+                style={{
+                  flex: 1,
+                  border: "1px solid #eee",
+                  padding: 20,
+                  borderRadius: 12,
+                  minWidth: 280
+                }}
+              >
                 <img
-                  src="https://via.placeholder.com/120"
+                  src={
+                    med.image_url ||
+                    "https://via.placeholder.com/120"
+                  }
                   alt="medicine"
-                  style={{ width: 120, borderRadius: 10 }}
+                  style={{
+                    width: 120,
+                    borderRadius: 10,
+                    marginBottom: 15
+                  }}
                 />
 
                 <h3>{med.branded_name}</h3>
-                <div className="company">
+                <p style={{ color: "#6b7280" }}>
                   {med.branded_company}
-                </div>
+                </p>
 
-                <div className="price">
+                <p style={{ fontWeight: 600 }}>
                   ₹{med.branded_price}
-                  <span className="mrp">
+                  <span
+                    style={{
+                      textDecoration: "line-through",
+                      marginLeft: 10,
+                      color: "#9ca3af"
+                    }}
+                  >
                     ₹{med.branded_mrp}
                   </span>
-                </div>
+                </p>
 
-                <div className="saving">
-                  You Save {brandedSave.toFixed(0)}%
-                </div>
+                <p style={{ color: "#16a34a" }}>
+                  Save {brandedSave.toFixed(0)}%
+                </p>
 
                 <button
                   className="add-btn branded-btn"
@@ -152,47 +208,69 @@ export default function Home() {
                     })
                   }
                 >
-                  Add to Cart
+                  Buy Branded
                 </button>
               </div>
 
               {/* GENERIC */}
-              <div className="product highlight">
+              <div
+                style={{
+                  flex: 1,
+                  background: "#FFF7ED",
+                  padding: 20,
+                  borderRadius: 12,
+                  border: "2px solid #F97316",
+                  minWidth: 280
+                }}
+              >
                 <div
                   style={{
                     background: "#F97316",
                     color: "white",
                     padding: "5px 12px",
-                    borderRadius: "20px",
+                    borderRadius: 20,
                     fontSize: 12,
                     display: "inline-block",
-                    marginBottom: 10,
+                    marginBottom: 10
                   }}
                 >
                   ⭐ Recommended
                 </div>
 
                 <img
-                  src="https://via.placeholder.com/120"
+                  src={
+                    med.image_url ||
+                    "https://via.placeholder.com/120"
+                  }
                   alt="medicine"
-                  style={{ width: 120, borderRadius: 10 }}
+                  style={{
+                    width: 120,
+                    borderRadius: 10,
+                    marginBottom: 15
+                  }}
                 />
 
                 <h3>{med.generic_name}</h3>
-                <div className="company">
+                <p style={{ color: "#6b7280" }}>
                   {med.generic_company}
-                </div>
+                </p>
 
-                <div className="price">
+                <p style={{ fontWeight: 600 }}>
                   ₹{med.generic_price}
-                  <span className="mrp">
+                  <span
+                    style={{
+                      textDecoration: "line-through",
+                      marginLeft: 10,
+                      color: "#9ca3af"
+                    }}
+                  >
                     ₹{med.generic_mrp}
                   </span>
-                </div>
+                </p>
 
-                <div className="saving">
+                <p style={{ color: "#16a34a" }}>
                   Save {genericSave.toFixed(0)}% + Extra ₹{switchSave}
-                </div>
+                </p>
 
                 <button
                   className="add-btn generic-btn"
@@ -203,12 +281,13 @@ export default function Home() {
                     })
                   }
                 >
-                  Add to Cart
+                  Switch & Save
                 </button>
               </div>
             </div>
-          );
-        })}
+          </div>
+        );
+      })}
     </div>
   );
 }
