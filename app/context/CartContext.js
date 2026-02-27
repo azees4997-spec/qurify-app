@@ -1,86 +1,57 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
-import { supabase } from "../lib/supabase";
+import { createContext, useContext, useState, useEffect } from "react";
 
-const CartContext = createContext();
+const CartContext = createContext(null);
 
 export function CartProvider({ children }) {
   const [cart, setCart] = useState([]);
-  const [showPopup, setShowPopup] = useState(false);
 
-  const addToCart = async (item) => {
-    const existing = cart.find((i) => i.name === item.name);
-
-    let updatedCart;
-
-    if (existing) {
-      updatedCart = cart.map((i) =>
-        i.name === item.name
-          ? { ...i, quantity: i.quantity + 1 }
-          : i
-      );
-    } else {
-      updatedCart = [...cart, { ...item, quantity: 1 }];
+  // Load cart from localStorage
+  useEffect(() => {
+    const savedCart = localStorage.getItem("cart");
+    if (savedCart) {
+      setCart(JSON.parse(savedCart));
     }
+  }, []);
 
-    setCart(updatedCart);
+  // Save cart to localStorage
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
 
-    // Show popup
-    setShowPopup(true);
-    setTimeout(() => setShowPopup(false), 2000);
-
-    // Save to Supabase
-    await supabase.from("cart_items").insert([
-      {
-        product_name: item.name,
-        price: item.price,
-        quantity: 1,
-      },
-    ]);
+  const addToCart = (item) => {
+    setCart((prev) => {
+      const existing = prev.find((p) => p.id === item.id);
+      if (existing) {
+        return prev.map((p) =>
+          p.id === item.id
+            ? { ...p, quantity: p.quantity + item.quantity }
+            : p
+        );
+      }
+      return [...prev, { ...item }];
+    });
   };
 
-  const increaseQty = (name) => {
-    setCart(
-      cart.map((item) =>
-        item.name === name
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      )
-    );
+  const removeFromCart = (id) => {
+    setCart((prev) => prev.filter((item) => item.id !== id));
   };
 
-  const decreaseQty = (name) => {
-    setCart(
-      cart
-        .map((item) =>
-          item.name === name
-            ? { ...item, quantity: item.quantity - 1 }
-            : item
-        )
-        .filter((item) => item.quantity > 0)
-    );
+  const clearCart = () => {
+    setCart([]);
   };
-
-  const total = cart.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
 
   return (
     <CartContext.Provider
-      value={{
-        cart,
-        addToCart,
-        increaseQty,
-        decreaseQty,
-        total,
-        showPopup,
-      }}
+      value={{ cart, addToCart, removeFromCart, clearCart }}
     >
       {children}
     </CartContext.Provider>
   );
 }
 
-export const useCart = () => useContext(CartContext);
+export function useCart() {
+  const context = useContext(CartContext);
+  return context;
+}
