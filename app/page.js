@@ -1,11 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
   const [search, setSearch] = useState("");
+  const [count, setCount] = useState(0);
   const router = useRouter();
+
+  // Animated Savings Counter
+  useEffect(() => {
+    let start = 0;
+    const end = 70;
+    const duration = 1500;
+    const incrementTime = 20;
+    const step = end / (duration / incrementTime);
+
+    const counter = setInterval(() => {
+      start += step;
+      if (start >= end) {
+        start = end;
+        clearInterval(counter);
+      }
+      setCount(Math.floor(start));
+    }, incrementTime);
+
+    return () => clearInterval(counter);
+  }, []);
 
   const handleSearch = () => {
     if (search.trim() !== "") {
@@ -16,26 +37,47 @@ export default function Home() {
   };
 
   return (
-    <div style={{ background: "#ffffff" }}>
-      
+    <div style={{ fontFamily: "Arial, sans-serif", background: "#fff" }}>
+
       {/* HERO SECTION */}
       <section
         style={{
-          padding: "80px 20px",
+          padding: "100px 20px",
           textAlign: "center",
-          background: "linear-gradient(to right, #1E3A8A, #2563eb)",
+          background: "linear-gradient(135deg, #1E3A8A, #2563EB)",
           color: "white",
+          position: "relative",
+          overflow: "hidden",
         }}
       >
-        <h1 style={{ fontSize: 42, marginBottom: 20 }}>
-          Save Up To <span style={{ color: "#F97316" }}>70%</span> on Medicines
+        {/* Animated Background Glow */}
+        <div
+          style={{
+            position: "absolute",
+            width: 300,
+            height: 300,
+            background: "#F97316",
+            borderRadius: "50%",
+            filter: "blur(120px)",
+            top: -50,
+            left: -50,
+            animation: "pulse 6s infinite",
+          }}
+        />
+
+        <h1 style={{ fontSize: 48, marginBottom: 20 }}>
+          Save Up To{" "}
+          <span style={{ color: "#F97316" }}>
+            {count}%
+          </span>{" "}
+          On Medicines
         </h1>
 
-        <p style={{ fontSize: 18, marginBottom: 30 }}>
-          Genuine • Trusted • WHO-GMP Certified Generics
+        <p style={{ fontSize: 20, marginBottom: 40 }}>
+          Genuine • Certified • Affordable
         </p>
 
-        {/* SEARCH BAR */}
+        {/* Sticky Search Bar */}
         <div
           style={{
             maxWidth: 600,
@@ -45,27 +87,26 @@ export default function Home() {
           }}
         >
           <input
-            placeholder="Search medicine name or composition..."
+            placeholder="Search medicine or composition..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             style={{
               flex: 1,
-              padding: 15,
-              borderRadius: 10,
+              padding: 16,
+              borderRadius: 12,
               border: "none",
               fontSize: 16,
             }}
           />
-
           <button
             onClick={handleSearch}
             style={{
-              padding: "15px 25px",
+              padding: "16px 25px",
               background: "#F97316",
               border: "none",
-              borderRadius: 10,
+              borderRadius: 12,
               color: "white",
-              fontWeight: 600,
+              fontWeight: "bold",
               cursor: "pointer",
             }}
           >
@@ -74,15 +115,15 @@ export default function Home() {
         </div>
       </section>
 
-      {/* WHY SWITCH SECTION */}
+      {/* BEFORE vs AFTER SECTION */}
       <section
         style={{
-          padding: "70px 20px",
+          padding: "80px 20px",
           textAlign: "center",
         }}
       >
-        <h2 style={{ fontSize: 30, marginBottom: 40, color: "#1E3A8A" }}>
-          Why Switch to Generics?
+        <h2 style={{ fontSize: 32, color: "#1E3A8A", marginBottom: 50 }}>
+          Same Composition. Massive Savings.
         </h2>
 
         <div
@@ -93,55 +134,104 @@ export default function Home() {
             flexWrap: "wrap",
           }}
         >
-          <div style={{ maxWidth: 250 }}>
-            <h3 style={{ color: "#F97316" }}>💰 Save More</h3>
-            <p>Pay less for the same composition & quality.</p>
+          <div
+            style={{
+              border: "1px solid #eee",
+              padding: 30,
+              borderRadius: 15,
+              width: 250,
+            }}
+          >
+            <h3>Dolo 650</h3>
+            <p style={{ textDecoration: "line-through", color: "gray" }}>
+              ₹35
+            </p>
+            <p style={{ fontSize: 22 }}>₹30</p>
           </div>
 
-          <div style={{ maxWidth: 250 }}>
-            <h3 style={{ color: "#F97316" }}>🏭 Certified</h3>
-            <p>Manufactured in WHO-GMP approved facilities.</p>
-          </div>
-
-          <div style={{ maxWidth: 250 }}>
-            <h3 style={{ color: "#F97316" }}>⚡ Fast Delivery</h3>
-            <p>Quick and reliable doorstep delivery.</p>
+          <div
+            style={{
+              border: "2px solid #F97316",
+              background: "#FFF7ED",
+              padding: 30,
+              borderRadius: 15,
+              width: 250,
+            }}
+          >
+            <h3>Paracip 650 ⭐</h3>
+            <p style={{ textDecoration: "line-through", color: "gray" }}>
+              ₹35
+            </p>
+            <p style={{ fontSize: 22, color: "#F97316" }}>₹10</p>
+            <p style={{ color: "green", fontWeight: "bold" }}>
+              Save ₹20
+            </p>
           </div>
         </div>
       </section>
 
-      {/* TRUST SECTION */}
+      {/* DOCTOR TRUST BADGE */}
       <section
         style={{
-          background: "#FFF7ED",
+          background: "#F8FAFC",
           padding: "60px 20px",
           textAlign: "center",
         }}
       >
-        <h2 style={{ fontSize: 28, marginBottom: 20 }}>
-          Trusted by Thousands
-        </h2>
-
+        <h2 style={{ marginBottom: 20 }}>Trusted by Doctors</h2>
         <p style={{ maxWidth: 600, margin: "auto" }}>
-          We ensure quality checks, licensed pharmacists,
-          and secure packaging for every order.
+          All medicines are sourced from WHO-GMP certified manufacturers and verified by licensed pharmacists.
         </p>
+      </section>
 
-        <button
-          onClick={() => router.push("/catalogue")}
+      {/* TESTIMONIALS */}
+      <section style={{ padding: "80px 20px", textAlign: "center" }}>
+        <h2 style={{ marginBottom: 40 }}>What Customers Say</h2>
+
+        <div
           style={{
-            marginTop: 30,
-            padding: "15px 30px",
-            background: "#F97316",
-            border: "none",
-            borderRadius: 10,
-            color: "white",
-            fontWeight: 600,
-            cursor: "pointer",
+            display: "flex",
+            justifyContent: "center",
+            gap: 30,
+            flexWrap: "wrap",
           }}
         >
-          Browse Medicines
-        </button>
+          <div style={{ maxWidth: 250 }}>
+            ⭐⭐⭐⭐⭐  
+            <p>"Saved thousands on monthly medicines!"</p>
+          </div>
+          <div style={{ maxWidth: 250 }}>
+            ⭐⭐⭐⭐⭐  
+            <p>"Same quality, much lower price."</p>
+          </div>
+          <div style={{ maxWidth: 250 }}>
+            ⭐⭐⭐⭐⭐  
+            <p>"Fast delivery & genuine medicines."</p>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ SECTION */}
+      <section
+        style={{
+          background: "#F8FAFC",
+          padding: "60px 20px",
+        }}
+      >
+        <h2 style={{ textAlign: "center", marginBottom: 30 }}>
+          Frequently Asked Questions
+        </h2>
+
+        <div style={{ maxWidth: 700, margin: "auto" }}>
+          <p><strong>Are generic medicines safe?</strong></p>
+          <p>Yes. They contain the same active ingredients as branded medicines.</p>
+
+          <p><strong>Why are they cheaper?</strong></p>
+          <p>No heavy marketing costs — same quality at lower price.</p>
+
+          <p><strong>Do I need prescription?</strong></p>
+          <p>Prescription medicines require valid doctor prescription.</p>
+        </div>
       </section>
 
     </div>
